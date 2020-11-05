@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>assets</file>
-        <file>assets/img</file>
-        <file>assets/snd</file>
-        <file>qml</file>
+        <file>assets/no-image.png</file>
+        <file>assets/felgo-logo.png</file>
     </qresource>
 </RCC>
