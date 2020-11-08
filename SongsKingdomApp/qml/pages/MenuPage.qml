@@ -12,6 +12,9 @@ Page {
         id: songsButtonId
         page: root
         source: "qrc:/assets/felgo-logo.png"
+        onClicked: {
+            root.navigationStack.push(Qt.resolvedUrl("SongsListPage.qml"))
+        }
 
         NumberAnimation on y {
             id: test1

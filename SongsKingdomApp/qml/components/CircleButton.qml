@@ -7,6 +7,8 @@ Item {
     property alias source: imageId.source
     property Page page: null
 
+    signal clicked()
+
     width: dp(100); height: width
     x: (page.width - width) / 2
     y: (page.height / 2 - height)
@@ -34,9 +36,35 @@ Item {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                root.x = (page.width - width) / 2
-                root.y = (page.height / 2 - height)
+                root.clicked()
+//                page.navigationStack.push(counterPageComponent)
             }
         }
+    }
+
+    Component {
+      id: counterPageComponent
+      Page {
+        title: "Change Count"
+//        property Page target: null
+
+        Column {
+          anchors.centerIn: parent
+
+          // buttons to increase or decrease the count, which is displayed on the main page
+          AppButton {
+            text: "Count ++"
+            onClicked: {
+//              app.count++
+            }
+          }
+          AppButton {
+            text: "Count --"
+            onClicked: {
+//              app.count--
+            }
+          }
+        }
+      }
     }
 }

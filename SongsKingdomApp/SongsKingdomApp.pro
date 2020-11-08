@@ -61,7 +61,10 @@ macx {
 
 DISTFILES += \
     qml/components/CircleButton.qml \
-    qml/pages/MenuPage.qml
+    qml/components/SongRow.qml \
+    qml/pages/MenuPage.qml \
+    qml/pages/SongsListPage.qml \
+    qml/pages/ViewSongPage.qml
 
 RESOURCES += \
     resources.qrc
