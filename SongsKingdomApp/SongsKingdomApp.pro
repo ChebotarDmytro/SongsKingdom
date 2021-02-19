@@ -52,14 +52,6 @@ ios {
     OTHER_FILES += $$QMAKE_INFO_PLIST
 }
 
-# set application icons for win and macx
-win32 {
-    RC_FILE += win/app_icon.rc
-}
-macx {
-    ICON = macx/app_icon.icns
-}
-
 DISTFILES += \
     qml/components/CircleButton.qml \
     qml/components/SongRow.qml \
@@ -73,3 +65,18 @@ RESOURCES += \
 
 HEADERS += \
     datasource.h
+
+message( $$PWD )
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/release/ -lQGumboParser
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/debug/ -lQGumboParser
+else:unix: LIBS += -L$$PWD/libs/ -lQGumboParser
+
+INCLUDEPATH += $$PWD/include
+DEPENDPATH += $$PWD/include
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/release/libQGumboParser.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/debug/libQGumboParser.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/release/QGumboParser.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/debug/QGumboParser.lib
+else:unix: PRE_TARGETDEPS += $$PWD/libs/libQGumboParser.a

@@ -76,7 +76,7 @@ Page {
     }
 
     title: qsTr("Songbook")
-    right   BarItem: IconButtonBarItem {
+    rightBarItem: IconButtonBarItem {
         icon: IconType.search
         onClicked: {
             console.log("Clicked on search button")

@@ -3,13 +3,62 @@
 
 #include <QQmlApplicationEngine>
 
+#include <QGumboParser/qgumbodocument.h>
+#include <QGumboParser/qgumbonode.h>
+
+#include <QDebug>
+
+#include "datasource.h"
+
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 //#include <FelgoLiveClient>
+const char* HTML_PAGE = R"~("
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title text</title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+    <h3>First header</h3>
+    <p>text text text</p>
+    <div class="content">
+        <h3>Nested header <a href="">with link</a></h3>
+    </div>
+  </body>
+</html>
+")~";
+
+
 
 int main(int argc, char *argv[])
 {
-
     QApplication app(argc, argv);
+
+    DataSource data;
+    data.fetchPage();
+
+//    auto doc = QGumboDocument::parse(HTML_PAGE);
+//    auto root = doc.rootNode();
+//    auto nodes = root.getElementsByTagName(HtmlTag::TITLE);
+//    Q_ASSERT(nodes.size() == 1);
+
+//    auto title = nodes.front();
+//    qDebug() << "title is: " << title.innerText();
+
+//    nodes = root.getElementsByTagName(HtmlTag::H3);
+//    for (const auto& node: nodes) {
+//        qDebug() << "h3: " << node.innerText();
+//    }
+
+//    auto container = root.getElementsByClassName("content");
+//    Q_ASSERT(container.size() == 1);
+
+//    auto children = container.front().children();
+//    for (const auto& node: children) {
+//        qDebug() << "Tag: " << node.tagName();
+//    }
 
     FelgoApplication felgo;
 

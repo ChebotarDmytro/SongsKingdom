@@ -1,0 +1,6 @@
+[submodule "3dparty/libs/QGumboParser"]
+	path = 3dparty/libs/QGumboParser
+	url = git@github.com:lagner/QGumboParser.git
+[submodule "SongsKingdomApp/3dparty/libs/QGumboParser"]
+	path = SongsKingdomApp/3dparty/libs/QGumboParser
+	url = git@github.com:lagner/QGumboParser.git
