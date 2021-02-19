@@ -7,10 +7,10 @@ App {
 
     property bool menuRunning: false
 
-    onInitTheme: {
-        //        Theme.navigationBar.backgroundColor = "red"
-        Theme.navigationBar.shadowHeight = 0
-    }
+//    onInitTheme: {
+//        //        Theme.navigationBar.backgroundColor = "red"
+//        Theme.navigationBar.shadowHeight = 0
+//    }
 
     onSplashScreenFinished: {
         console.log("start anime")
@@ -25,9 +25,12 @@ App {
             icon: IconType.home
 
             NavigationStack {
-                MenuPage {
-                    id: menuId
-                    running: menuRunning
+//                MenuPage {
+//                    id: menuId
+//                    running: menuRunning
+//                }\
+                MainPage {
+
                 }
             }
         }
