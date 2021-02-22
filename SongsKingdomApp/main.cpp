@@ -8,7 +8,8 @@
 
 #include <QDebug>
 
-#include "datasource.h"
+#include "htmlloader.h"
+#include "htmlparser.h"
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 //#include <FelgoLiveClient>
@@ -21,26 +22,62 @@ const char* HTML_PAGE = R"~("
     <style></style>
   </head>
   <body>
-    <h3>First header</h3>
-    <p>text text text</p>
-    <div class="content">
-        <h3>Nested header <a href="">with link</a></h3>
+     <div class="post-thumbnail">
+        <a href="https://kievicc.org/news/gnn-2/">
+        <img
+                        width="520"
+                        height="245"
+                        src="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg"
+                        class="attachment-enspire-medium size-enspire-medium wp-post-image"
+                        alt=""
+                        loading="lazy"
+                        srcset="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg 520w, https://kievicc.org/wp-content/uploads/2020/10/gnn2-720x340.jpg 720w"
+           >
+        </a>
+        <div class="square-icon"> <div class="square-icon-inner"> <a href="https://kievicc.org/type/video/"> <i class="fas fa-icon"></i></a></div>
+        </div>
     </div>
+
+                        <div class="post-thumbnail">
+                           <a href="https://kievicc.org/news/gnn-2/">
+                           <img
+                                           width="520"
+                                           height="245"
+                                           src="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg"
+                                           class="attachment-enspire-medium size-enspire-medium wp-post-image"
+                                           alt=""
+                                           loading="lazy"
+                                           srcset="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg 520w, https://kievicc.org/wp-content/uploads/2020/10/gnn2-720x340.jpg 720w"
+                              >
+                           </a>
+                           <div class="square-icon"> <div class="square-icon-inner"> <a href="https://kievicc.org/type/video/"> <i class="fas fa-icon"></i></a></div>
+                           </div>
+                       </div>
+
   </body>
 </html>
 ")~";
-
 
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    DataSource data;
-    data.fetchPage();
+    HtmlLoader htmlLoader;
+    htmlLoader.fetchPage();
 
-//    auto doc = QGumboDocument::parse(HTML_PAGE);
+    QObject::connect(&htmlLoader, &HtmlLoader::dataBufferReady, [ ](QByteArray data)
+    {
+        auto doc = QGumboDocument::parse(data);
+        auto root = doc.rootNode();
+
+        auto result = HtmlParser::postThumbnail(root);
+    });
+
+//    auto doc = QGumboDocument::parse(data.dataBuffer());
 //    auto root = doc.rootNode();
+//    QMap<QString, QString> result;
+//    postThumbnail(root, "post-thumbnail", result);
 //    auto nodes = root.getElementsByTagName(HtmlTag::TITLE);
 //    Q_ASSERT(nodes.size() == 1);
 
@@ -52,13 +89,6 @@ int main(int argc, char *argv[])
 //        qDebug() << "h3: " << node.innerText();
 //    }
 
-//    auto container = root.getElementsByClassName("content");
-//    Q_ASSERT(container.size() == 1);
-
-//    auto children = container.front().children();
-//    for (const auto& node: children) {
-//        qDebug() << "Tag: " << node.tagName();
-//    }
 
     FelgoApplication felgo;
 

@@ -1,21 +1,21 @@
-#ifndef DATASOURCE_H
-#define DATASOURCE_H
+#ifndef HTMLLOADER_H
+#define HTMLLOADER_H
 
 #include <QObject>
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class QByteArray;
 
-class DataSource : public QObject
+class HtmlLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit DataSource(QObject *parent = nullptr);
+    explicit HtmlLoader(QObject *parent = nullptr);
 
     Q_INVOKABLE void fetchPage();
 
 signals:
+    void dataBufferReady(QByteArray);
 
 private slots:
     void dataReadyRead();
@@ -24,7 +24,8 @@ private slots:
 private:
     QNetworkAccessManager *m_NetManager = nullptr;
     QNetworkReply *m_NetReply = nullptr;
-    QByteArray *m_DataBuffer = nullptr;
+
+    QByteArray m_DataBuffer;
 };
 
-#endif // DATASOURCE_H
+#endif // HTMLLOADER_H
