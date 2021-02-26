@@ -9,9 +9,15 @@
 class HtmlParser
 {
 public:
-    static QList<QJsonObject> postThumbnail(QGumboNode root);
+    static bool parse(QGumboNode root);
+    static QList<QJsonObject> result();
+
 private:
     HtmlParser(){};
+    static QList<QJsonObject> postThumbnail(QGumboNode root);
+    static QList<QJsonObject> postTitle(QGumboNode root);
+
+    static QList<QJsonObject> m_result;
 };
 
 #endif // HTMLPARSER_H

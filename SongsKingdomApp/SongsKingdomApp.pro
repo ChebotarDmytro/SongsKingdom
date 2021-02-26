@@ -40,6 +40,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     htmlloader.cpp \
+    htmlmodel.cpp \
     htmlparser.cpp \
 
 
@@ -55,6 +56,7 @@ ios {
 
 DISTFILES += \
     qml/components/CircleButton.qml \
+    qml/components/PostRow.qml \
     qml/components/SongRow.qml \
     qml/pages/MainPage.qml \
     qml/pages/MenuPage.qml \
@@ -66,6 +68,7 @@ RESOURCES += \
 
 HEADERS += \
     htmlloader.h \
+    htmlmodel.h \
     htmlparser.h
 
 message( $$PWD )

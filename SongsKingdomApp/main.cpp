@@ -2,29 +2,31 @@
 #include <FelgoApplication>
 
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include <QGumboParser/qgumbodocument.h>
 #include <QGumboParser/qgumbonode.h>
 
 #include <QDebug>
 
+#include "htmlmodel.h"
 #include "htmlloader.h"
 #include "htmlparser.h"
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 //#include <FelgoLiveClient>
 const char* HTML_PAGE = R"~("
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Title text</title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body>
-     <div class="post-thumbnail">
-        <a href="https://kievicc.org/news/gnn-2/">
-        <img
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                        <title>Title text</title>
+                        <meta content="">
+                        <style></style>
+                        </head>
+                        <body>
+                        <div class="post-thumbnail">
+                        <a href="https://kievicc.org/news/gnn-2/">
+                        <img
                         width="520"
                         height="245"
                         src="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg"
@@ -32,62 +34,80 @@ const char* HTML_PAGE = R"~("
                         alt=""
                         loading="lazy"
                         srcset="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg 520w, https://kievicc.org/wp-content/uploads/2020/10/gnn2-720x340.jpg 720w"
-           >
-        </a>
-        <div class="square-icon"> <div class="square-icon-inner"> <a href="https://kievicc.org/type/video/"> <i class="fas fa-icon"></i></a></div>
-        </div>
-    </div>
+                        >
+                        </a>
+                        <div class="square-icon"> <div class="square-icon-inner"> <a href="https://kievicc.org/type/video/"> <i class="fas fa-icon"></i></a></div>
+                        </div>
+                        </div>
 
                         <div class="post-thumbnail">
-                           <a href="https://kievicc.org/news/gnn-2/">
-                           <img
-                                           width="520"
-                                           height="245"
-                                           src="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg"
-                                           class="attachment-enspire-medium size-enspire-medium wp-post-image"
-                                           alt=""
-                                           loading="lazy"
-                                           srcset="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg 520w, https://kievicc.org/wp-content/uploads/2020/10/gnn2-720x340.jpg 720w"
-                              >
-                           </a>
-                           <div class="square-icon"> <div class="square-icon-inner"> <a href="https://kievicc.org/type/video/"> <i class="fas fa-icon"></i></a></div>
-                           </div>
-                       </div>
+                        <a href="https://kievicc.org/news/gnn-2/">
+                        <img
+                        width="520"
+                        height="245"
+                        src="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg"
+                        class="attachment-enspire-medium size-enspire-medium wp-post-image"
+                        alt=""
+                        loading="lazy"
+                        srcset="https://kievicc.org/wp-content/uploads/2020/10/gnn2-520x245.jpg 520w, https://kievicc.org/wp-content/uploads/2020/10/gnn2-720x340.jpg 720w"
+                        >
+                        </a>
+                        <div class="square-icon"> <div class="square-icon-inner"> <a href="https://kievicc.org/type/video/"> <i class="fas fa-icon"></i></a></div>
+                        </div>
+                        </div>
 
-  </body>
-</html>
-")~";
+                        </body>
+                        </html>
+                        ")~";
 
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    HtmlModel htmlModel;
+
     HtmlLoader htmlLoader;
     htmlLoader.fetchPage();
 
-    QObject::connect(&htmlLoader, &HtmlLoader::dataBufferReady, [ ](QByteArray data)
+    QObject::connect(&htmlLoader, &HtmlLoader::dataBufferReady, [&htmlModel](QByteArray data)
     {
         auto doc = QGumboDocument::parse(data);
         auto root = doc.rootNode();
 
-        auto result = HtmlParser::postThumbnail(root);
+        bool isCorrect = HtmlParser::parse(root);
+
+        if(isCorrect)
+        {
+            auto result = HtmlParser::result();
+            for (const QJsonObject &object : result)
+            {
+                auto htmlData = QSharedPointer<HtmlData>::create();
+//                qDebug() << object.value("href").toString();
+//                qDebug() << object.value("src").toString();
+//                qDebug() << object.value("title").toString();
+                htmlData->setPageUrl(object.value("href").toString());
+                htmlData->setImageUrl(object.value("src").toString());
+                htmlData->setTitle(object.value("title").toString());
+                htmlModel.addHtmlData(htmlData);
+            }
+        }
     });
 
-//    auto doc = QGumboDocument::parse(data.dataBuffer());
-//    auto root = doc.rootNode();
-//    QMap<QString, QString> result;
-//    postThumbnail(root, "post-thumbnail", result);
-//    auto nodes = root.getElementsByTagName(HtmlTag::TITLE);
-//    Q_ASSERT(nodes.size() == 1);
+    //    auto doc = QGumboDocument::parse(data.dataBuffer());
+    //    auto root = doc.rootNode();
+    //    QMap<QString, QString> result;
+    //    postThumbnail(root, "post-thumbnail", result);
+    //    auto nodes = root.getElementsByTagName(HtmlTag::TITLE);
+    //    Q_ASSERT(nodes.size() == 1);
 
-//    auto title = nodes.front();
-//    qDebug() << "title is: " << title.innerText();
+    //    auto title = nodes.front();
+    //    qDebug() << "title is: " << title.innerText();
 
-//    nodes = root.getElementsByTagName(HtmlTag::H3);
-//    for (const auto& node: nodes) {
-//        qDebug() << "h3: " << node.innerText();
-//    }
+    //    nodes = root.getElementsByTagName(HtmlTag::H3);
+    //    for (const auto& node: nodes) {
+    //        qDebug() << "h3: " << node.innerText();
+    //    }
 
 
     FelgoApplication felgo;
@@ -112,11 +132,13 @@ int main(int argc, char *argv[])
     // also see the .pro file for more details
     //felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
 
+    engine.rootContext()->setContextProperty("htmlModel", &htmlModel);
+
     engine.load(QUrl(felgo.mainQmlFileName()));
 
     // to start your project as Live Client, comment (remove) the lines "felgo.setMainQmlFileName ..." & "engine.load ...",
     // and uncomment the line below
-//    FelgoLiveClient client (&engine);
+    //    FelgoLiveClient client (&engine);
 
     return app.exec();
 }
