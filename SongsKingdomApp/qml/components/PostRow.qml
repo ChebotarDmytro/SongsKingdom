@@ -1,38 +1,64 @@
 import QtQuick 2.0
+import QtGraphicalEffects 1.12
 import Felgo 3.0
 
 Rectangle {
     id: root
-
-    property StyleSimpleRow style: StyleSimpleRow {}
     property alias _source: imageId.source
     property alias _title: titleId.text
 
     height: columnId.height
     width: !parent ? 0 : parent.width
-    color: "red"//style.backgroundColor
+    radius: dp(10)
+    border {
+        width: dp(1)
+        color: "#E8E8E8"
+    }
+    layer.enabled: true
+    layer.effect: DropShadow {
+        transparentBorder: true
+        verticalOffset: dp(1)
+        color: "#E8E8E8"
+        radius: dp(4)
+        samples: 9
+    }
 
     Column {
         id: columnId
         anchors.centerIn: parent
-        spacing: 10 //dp(Theme.navigationBar.defaultBarItemPadding)
 
         AppImage {
             id: imageId
-            height: 245 // TODO
-            fillMode: Image.PreserveAspectFit
+            height: dp(150)
+            width: root.width
+            fillMode: Image.PreserveAspectCrop
             source: root.source
+            layer.enabled: true
+            layer.effect: OpacityMask {
+                maskSource: Item {
+                    width: imageId.width
+                    height: imageId.height
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: imageId.width
+                        height: imageId.height
+                        radius: dp(5)
+                    }
+                }
+            }
         }
 
         AppText {
             id: titleId
-            height: 100
+            anchors.left: parent.left
+            anchors.leftMargin: dp(10)
+            height: dp(40)
+            width: root.width
             elide: Text.ElideRight
-            color: Theme.secondaryTextColor
+            color: Theme.textColor
             text: root.title
-            maximumLineCount: 2
-            font.pixelSize: sp(12)
-            opacity: 0.75
+            maximumLineCount: 1
+            font.pixelSize: Theme.listItem.fontSizeText
         }
     }
 }

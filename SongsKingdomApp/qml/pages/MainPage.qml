@@ -3,9 +3,9 @@ import Felgo 3.0
 import "../components"
 
 ListPage {
-
     title: qsTr("ICC")
-    listView.spacing: 10
+    listView.anchors.margins: dp(10)
+    listView.spacing: dp(10)
     model: htmlModel
 
     delegate: PostRow {

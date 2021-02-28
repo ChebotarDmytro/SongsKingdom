@@ -8,7 +8,7 @@ App {
     property bool menuRunning: false
 
 //    onInitTheme: {
-//        //        Theme.navigationBar.backgroundColor = "red"
+////        //        Theme.navigationBar.backgroundColor = "red"
 //        Theme.navigationBar.shadowHeight = 0
 //    }
 

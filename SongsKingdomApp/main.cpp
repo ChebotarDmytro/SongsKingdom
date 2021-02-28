@@ -14,7 +14,8 @@
 #include "htmlparser.h"
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
-//#include <FelgoLiveClient>
+#include <FelgoLiveClient>
+
 const char* HTML_PAGE = R"~("
                         <!DOCTYPE html>
                         <html>
@@ -124,7 +125,7 @@ int main(int argc, char *argv[])
 
     // use this during development
     // for PUBLISHING, use the entry point below
-    felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));
+//    felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));
 
     // use this instead of the above call to avoid deployment of the qml files and compile them into the binary with qt's resource system qrc
     // this is the preferred deployment option for publishing games to the app stores, because then your qml files and js files are protected
@@ -134,11 +135,11 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("htmlModel", &htmlModel);
 
-    engine.load(QUrl(felgo.mainQmlFileName()));
+//    engine.load(QUrl(felgo.mainQmlFileName()));
 
     // to start your project as Live Client, comment (remove) the lines "felgo.setMainQmlFileName ..." & "engine.load ...",
     // and uncomment the line below
-    //    FelgoLiveClient client (&engine);
+        FelgoLiveClient client (&engine);
 
     return app.exec();
 }
