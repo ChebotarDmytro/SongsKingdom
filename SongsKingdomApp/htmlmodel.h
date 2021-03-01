@@ -41,6 +41,7 @@ private:
 class HtmlModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool loading READ loading WRITE setLoading NOTIFY loadingChanged)
 public:
     enum HtmlRoles
     {
@@ -59,9 +60,17 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void addHtmlData(QSharedPointer<HtmlData> data);
+    bool loading() const;
+
+public slots:
+    void setLoading(bool loading);
+
+signals:
+    void loadingChanged(bool loading);
 
 private:
     QList<QSharedPointer<HtmlData>> m_listData;
+    bool m_loading = true;
 };
 
 #endif // HTMLMODEL_H

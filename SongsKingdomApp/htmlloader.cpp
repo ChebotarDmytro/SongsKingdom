@@ -1,13 +1,20 @@
 #include "htmlloader.h"
 
+#include <QNetworkConfigurationManager>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
 HtmlLoader::HtmlLoader(QObject *parent) : QObject(parent),
+    m_NetConfigManager(new QNetworkConfigurationManager(this)),
     m_NetManager(new QNetworkAccessManager(this))
 {
 
+}
+
+bool HtmlLoader::isConnection()
+{
+    return m_NetConfigManager->isOnline();
 }
 
 void HtmlLoader::fetchPage()

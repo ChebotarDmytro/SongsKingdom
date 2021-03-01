@@ -136,3 +136,17 @@ void HtmlModel::addHtmlData(QSharedPointer<HtmlData> data)
     m_listData.append(data);
     endInsertRows();
 }
+
+bool HtmlModel::loading() const
+{
+    return m_loading;
+}
+
+void HtmlModel::setLoading(bool loading)
+{
+    if (m_loading == loading)
+        return;
+
+    m_loading = loading;
+    emit loadingChanged(m_loading);
+}

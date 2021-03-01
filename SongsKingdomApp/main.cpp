@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     HtmlModel htmlModel;
 
     HtmlLoader htmlLoader;
-    htmlLoader.fetchPage();
+//    htmlLoader.fetchPage();
 
     QObject::connect(&htmlLoader, &HtmlLoader::dataBufferReady, [&htmlModel](QByteArray data)
     {
@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
                 htmlData->setTitle(object.value("title").toString());
                 htmlModel.addHtmlData(htmlData);
             }
+            htmlModel.setLoading(false);
         }
     });
 
@@ -131,15 +132,16 @@ int main(int argc, char *argv[])
     // this is the preferred deployment option for publishing games to the app stores, because then your qml files and js files are protected
     // to avoid deployment of your qml files and images, also comment the DEPLOYMENTFOLDERS command in the .pro file
     // also see the .pro file for more details
-    //felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
+    felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
 
     engine.rootContext()->setContextProperty("htmlModel", &htmlModel);
+    engine.rootContext()->setContextProperty("htmlLoader", &htmlLoader);
 
-//    engine.load(QUrl(felgo.mainQmlFileName()));
+    engine.load(QUrl(felgo.mainQmlFileName()));
 
     // to start your project as Live Client, comment (remove) the lines "felgo.setMainQmlFileName ..." & "engine.load ...",
     // and uncomment the line below
-        FelgoLiveClient client (&engine);
+//        FelgoLiveClient client (&engine);
 
     return app.exec();
 }

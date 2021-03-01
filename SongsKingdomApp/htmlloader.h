@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class QNetworkConfigurationManager;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -12,6 +13,7 @@ class HtmlLoader : public QObject
 public:
     explicit HtmlLoader(QObject *parent = nullptr);
 
+    Q_INVOKABLE bool isConnection();
     Q_INVOKABLE void fetchPage();
 
 signals:
@@ -22,6 +24,7 @@ private slots:
     void dataReadFinished();
 
 private:
+    QNetworkConfigurationManager *m_NetConfigManager = nullptr;
     QNetworkAccessManager *m_NetManager = nullptr;
     QNetworkReply *m_NetReply = nullptr;
 
