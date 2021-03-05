@@ -9,10 +9,12 @@ ListPage {
     function fetchPage()
     {
         if(htmlLoader.isConnection()) {
+            console.log("connection good");
             badConnectionId.visible = false;
             busyIndicatorId.visible = true;
             htmlLoader.fetchPage();
         } else {
+            console.log("connection bad");
             busyIndicatorId.visible = false;
             badConnectionId.visible = true;
         }
@@ -21,6 +23,15 @@ ListPage {
     title: qsTr("ICC")
     listView.anchors.margins: dp(10)
     listView.spacing: dp(10)
+    listView.scrollIndicatorVisible: false
+
+//    listView.onCurrentIndexChanged: {
+//        console.log("currentIndex: ", listView.currentIndex)
+////        root.navigationStack.push(Qt.resolvedUrl("MenuPage.qml"))
+//    }
+//    listView.onCurrentItemChanged: {
+//        console.log("onCurrentItemChanged: ")
+//    }
 
     AppActivityIndicator {
         id: busyIndicatorId
@@ -61,6 +72,10 @@ ListPage {
     delegate: PostRow {
         _source: imageUrl
         _title: title
+
+        onOpenPage: {
+            root.navigationStack.push(Qt.resolvedUrl("SongsListPage.qml"));
+        }
     }
 
     Connections {

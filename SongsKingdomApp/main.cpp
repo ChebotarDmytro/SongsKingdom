@@ -67,50 +67,28 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     HtmlModel htmlModel;
-
     HtmlLoader htmlLoader;
-//    htmlLoader.fetchPage();
 
     QObject::connect(&htmlLoader, &HtmlLoader::dataBufferReady, [&htmlModel](QByteArray data)
     {
-        auto doc = QGumboDocument::parse(data);
-        auto root = doc.rootNode();
-
-        bool isCorrect = HtmlParser::parse(root);
+        bool isCorrect = HtmlParser::parse(data);
 
         if(isCorrect)
         {
             auto result = HtmlParser::result();
+
+            htmlModel.setLoading(true);
             for (const QJsonObject &object : result)
             {
                 auto htmlData = QSharedPointer<HtmlData>::create();
-//                qDebug() << object.value("href").toString();
-//                qDebug() << object.value("src").toString();
-//                qDebug() << object.value("title").toString();
-                htmlData->setPageUrl(object.value("href").toString());
-                htmlData->setImageUrl(object.value("src").toString());
                 htmlData->setTitle(object.value("title").toString());
+                htmlData->setImageUrl(object.value("src").toString());
+                htmlData->setText(object.value("text").toString());
                 htmlModel.addHtmlData(htmlData);
             }
             htmlModel.setLoading(false);
         }
     });
-
-    //    auto doc = QGumboDocument::parse(data.dataBuffer());
-    //    auto root = doc.rootNode();
-    //    QMap<QString, QString> result;
-    //    postThumbnail(root, "post-thumbnail", result);
-    //    auto nodes = root.getElementsByTagName(HtmlTag::TITLE);
-    //    Q_ASSERT(nodes.size() == 1);
-
-    //    auto title = nodes.front();
-    //    qDebug() << "title is: " << title.innerText();
-
-    //    nodes = root.getElementsByTagName(HtmlTag::H3);
-    //    for (const auto& node: nodes) {
-    //        qDebug() << "h3: " << node.innerText();
-    //    }
-
 
     FelgoApplication felgo;
 
@@ -126,13 +104,13 @@ int main(int argc, char *argv[])
 
     // use this during development
     // for PUBLISHING, use the entry point below
-//    felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));
+    felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));
 
     // use this instead of the above call to avoid deployment of the qml files and compile them into the binary with qt's resource system qrc
     // this is the preferred deployment option for publishing games to the app stores, because then your qml files and js files are protected
     // to avoid deployment of your qml files and images, also comment the DEPLOYMENTFOLDERS command in the .pro file
     // also see the .pro file for more details
-    felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
+//    felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
 
     engine.rootContext()->setContextProperty("htmlModel", &htmlModel);
     engine.rootContext()->setContextProperty("htmlLoader", &htmlLoader);

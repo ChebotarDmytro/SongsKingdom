@@ -43,6 +43,10 @@ class HtmlModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(bool loading READ loading WRITE setLoading NOTIFY loadingChanged)
 public:
+    enum TypeData
+    {
+
+    };
     enum HtmlRoles
     {
         PageUrl = Qt::UserRole + 1,

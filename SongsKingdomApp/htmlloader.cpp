@@ -4,6 +4,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QUrlQuery>
 
 HtmlLoader::HtmlLoader(QObject *parent) : QObject(parent),
     m_NetConfigManager(new QNetworkConfigurationManager(this)),
@@ -19,9 +20,22 @@ bool HtmlLoader::isConnection()
 
 void HtmlLoader::fetchPage()
 {
-    const QUrl API_ENDPOINT("https://kievicc.org/"); // TODO ini. file
-    QNetworkRequest request;
-    request.setUrl(API_ENDPOINT);
+    //authentication
+    QUrlQuery urlQuery;
+    urlQuery.addQueryItem("per_page", "10");
+
+    QUrl url("https://kievicc.org/wp-json/wp/v2/posts/");
+    url.setUserName("vitalinska");
+    url.setPassword("WCKj 4YMp XDIY rS7C 5CgS A8L3");
+    url.setQuery(urlQuery);
+
+    QByteArray data = QString("%1:%2").arg(url.userName())
+                                      .arg(url.password()).toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+
+    // TODO ini. file
+    QNetworkRequest request = QNetworkRequest(url);
+    request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     m_NetReply = m_NetManager->get(request); // TODO delete later
     connect(m_NetReply, &QIODevice::readyRead, this, &HtmlLoader::dataReadyRead);

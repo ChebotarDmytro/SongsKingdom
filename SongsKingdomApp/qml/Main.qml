@@ -7,10 +7,10 @@ App {
 
     property bool menuRunning: false
 
-//    onInitTheme: {
-////        //        Theme.navigationBar.backgroundColor = "red"
-//        Theme.navigationBar.shadowHeight = 0
-//    }
+    //    onInitTheme: {
+    ////        //        Theme.navigationBar.backgroundColor = "red"
+    //        Theme.navigationBar.shadowHeight = 0
+    //    }
 
     onSplashScreenFinished: {
         console.log("start anime")
@@ -21,15 +21,29 @@ App {
         navigationMode: navigationModeDrawer
 
         NavigationItem {
-            title: qsTr("Home")
-            icon: IconType.home
+            title: qsTr("Хороші новини")
+            icon: IconType.newspapero
 
             NavigationStack {
-//                MenuPage {
-//                    id: menuId
-//                    running: menuRunning
-//                }\
                 MainPage {
+
+                }
+            }
+        }
+
+        NavigationItem {
+            title: qsTr("Пісенник")
+            icon: IconType.book
+
+            NavigationStack {
+                Page {
+                    Text {
+                        anchors.fill: parent
+                        id: name
+                        textFormat: Text.RichText
+                        wrapMode: Text.WordWrap
+                        text: qsTr("<p>Місце:&nbsp;<a href=https://zoom.us/j/5396261476>https://zoom.us/j/5396261476</a></p>")
+                    }
 
                 }
             }

@@ -7,6 +7,8 @@ Rectangle {
     property alias _source: imageId.source
     property alias _title: titleId.text
 
+    signal openPage(string namePage)
+
     height: columnId.height
     width: !parent ? 0 : parent.width
     radius: dp(10)
@@ -21,6 +23,16 @@ Rectangle {
         color: "#E8E8E8"
         radius: dp(4)
         samples: 9
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+//            listView.currentIndex = index;
+//            console.log("currentIndex: ", listView.currentIndex)
+            console.log("pageUrl: ", model.pageUrl)
+            root.openPage(model.pageUrl)
+        }
     }
 
     Column {
@@ -56,6 +68,7 @@ Rectangle {
             width: root.width
             elide: Text.ElideRight
             color: Theme.textColor
+            textFormat: Text.RichText
             text: root.title
             maximumLineCount: 1
             font.pixelSize: Theme.listItem.fontSizeText

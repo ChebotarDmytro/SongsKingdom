@@ -1,35 +1,42 @@
 #include "htmlparser.h"
 
+#include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QDebug>
 
 #include <QGumboParser/qgumbodocument.h>
 
 QList<QJsonObject> HtmlParser::m_result;
 
-bool HtmlParser::parse(QGumboNode root)
+bool HtmlParser::parse(QByteArray data)
 {
-    auto postThumbnailObjects = postThumbnail(root);
-    auto postTitleObjects = postTitle(root);
-
-    if(postThumbnailObjects.size() != postTitleObjects.size())
+    auto doc = QJsonDocument::fromJson(data);
+    if(!doc.isEmpty())
     {
-        qDebug() << Q_FUNC_INFO << "Error: incorrect size";
-        return false;
+        if(doc.isArray())
+        {
+            QJsonArray posts = doc.array();
+
+            for(int i = 0; i < posts.size(); i++)
+            {
+                QJsonObject resultObject;
+                QJsonObject post = posts.at(i).toObject();
+
+                QJsonObject title = post["title"].toObject();
+                resultObject["title"] = title.value("rendered");
+
+                QJsonObject content = contentParse( post["content"].toObject() );
+                resultObject["src"] = content.value("src");
+                resultObject["text"] = content.value("text");
+
+                m_result.append(resultObject);
+            }
+            return true;
+        }
     }
 
-    for(int i = 0; i < postThumbnailObjects.size(); i++)
-    {
-        QJsonObject totalObject;
-        totalObject["href"] = postThumbnailObjects[i].value("href").toString();
-        totalObject["src"] = postThumbnailObjects[i].value("src").toString();
-
-        totalObject["title"] = postTitleObjects[i].value("title").toString();
-
-        m_result.append(totalObject);
-    }
-
-    return true;
+    return false;
 }
 
 QList<QJsonObject> HtmlParser::result()
@@ -37,62 +44,64 @@ QList<QJsonObject> HtmlParser::result()
     return m_result;
 }
 
-QList<QJsonObject> HtmlParser::postThumbnail(QGumboNode root)
+QJsonObject HtmlParser::contentParse(QJsonObject content)
 {
-    auto container = root.getElementsByClassName("post-thumbnail");
+    auto doc = QGumboDocument::parse(content["rendered"].toString());
+    auto root = doc.rootNode();
 
-    QList<QJsonObject> listObject;
+    QJsonObject jsonObject;
 
-    for(const auto& className : container)
     {
-        QJsonObject jsonObject;
+        // parse the <p> </p> tags
+        auto container = root.getElementsByTagName(HtmlTag::P);
+        QString result;
 
-        auto children = className.children();
-
-        for (const auto& node: children)
+        for(const auto& node : container)
         {
-            if(node.tag() == HtmlTag::A)
+            if(node.tag() == HtmlTag::P)
             {
-                jsonObject["href"] = node.getAttribute("href");
-
-                auto nodeChildren = node.children();
-                auto nodeNodeChildren = nodeChildren.front();
-
-                if(nodeNodeChildren.tag() == HtmlTag::IMG)
-                {
-                    jsonObject["src"] = nodeNodeChildren.getAttribute("src");
-                }
+                result += node.outerHtml();
             }
         }
-
-        listObject.append(jsonObject);
+        jsonObject["text"] = result;
     }
 
-    return listObject;
-}
-
-QList<QJsonObject> HtmlParser::postTitle(QGumboNode root)
-{
-    auto container = root.getElementsByClassName("post-title");
-
-    QList<QJsonObject> listObject;
-
-    for(const auto& className : container)
     {
-        QJsonObject jsonObject;
-
-        auto children = className.children();
-
-        for (const auto& node: children)
+        // parse the wp-block-image class
+        auto container = root.getElementsByClassName("wp-block-image");
+        if(container.empty())
         {
-            if(node.tag() == HtmlTag::A)
-            {
-                jsonObject["title"] = node.innerText();
-            }
+            qDebug() << Q_FUNC_INFO << "Empty container";
+            jsonObject["src"] = QJsonValue("qrc:/assets/no-image.png");
+            return jsonObject;
         }
 
-        listObject.append(jsonObject);
+        auto children = container.front().children();
+        if(children.empty())
+        {
+            qDebug() << Q_FUNC_INFO << "Empty children";
+            jsonObject["src"] = QJsonValue("qrc:/assets/no-image.png");
+            return jsonObject;
+        }
+
+        auto node = children.front();
+        if(!node.children().empty())
+        {
+            auto imgNode = node.children().front();
+
+            if(imgNode.tag() == HtmlTag::IMG)
+            {
+                jsonObject["src"] = imgNode.getAttribute("src");
+            }
+        }
+        else // IMG
+        {
+            if(node.tag() == HtmlTag::IMG)
+            {
+                jsonObject["src"] = node.getAttribute("src");
+            }
+        }
     }
 
-    return listObject;
+    return jsonObject;
 }
