@@ -1,4 +1,4 @@
-#include "htmlloader.h"
+#include "postsloader.h"
 
 #include <QNetworkConfigurationManager>
 #include <QNetworkAccessManager>
@@ -6,19 +6,19 @@
 #include <QNetworkRequest>
 #include <QUrlQuery>
 
-HtmlLoader::HtmlLoader(QObject *parent) : QObject(parent),
+PostsLoader::PostsLoader(QObject *parent) : QObject(parent),
     m_NetConfigManager(new QNetworkConfigurationManager(this)),
     m_NetManager(new QNetworkAccessManager(this))
 {
 
 }
 
-bool HtmlLoader::isConnection()
+bool PostsLoader::isConnection()
 {
     return m_NetConfigManager->isOnline();
 }
 
-void HtmlLoader::fetchPage()
+void PostsLoader::fetchPosts()
 {
     //authentication
     QUrlQuery urlQuery;
@@ -38,16 +38,16 @@ void HtmlLoader::fetchPage()
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     m_NetReply = m_NetManager->get(request); // TODO delete later
-    connect(m_NetReply, &QIODevice::readyRead, this, &HtmlLoader::dataReadyRead);
-    connect(m_NetReply, &QNetworkReply::finished, this, &HtmlLoader::dataReadFinished);
+    connect(m_NetReply, &QIODevice::readyRead, this, &PostsLoader::dataReadyRead);
+    connect(m_NetReply, &QNetworkReply::finished, this, &PostsLoader::dataReadFinished);
 }
 
-void HtmlLoader::dataReadyRead()
+void PostsLoader::dataReadyRead()
 {
     m_DataBuffer.append(m_NetReply->readAll());
 }
 
-void HtmlLoader::dataReadFinished()
+void PostsLoader::dataReadFinished()
 {
     if(m_NetReply->error())
     {

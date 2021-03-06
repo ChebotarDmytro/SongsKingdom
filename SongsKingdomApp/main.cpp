@@ -9,9 +9,9 @@
 
 #include <QDebug>
 
-#include "htmlmodel.h"
-#include "htmlloader.h"
-#include "htmlparser.h"
+#include "postsmodel.h"
+#include "postsloader.h"
+#include "postsparser.h"
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 #include <FelgoLiveClient>
@@ -66,27 +66,27 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    HtmlModel htmlModel;
-    HtmlLoader htmlLoader;
+    PostsModel postsModel;
+    PostsLoader postsLoader;
 
-    QObject::connect(&htmlLoader, &HtmlLoader::dataBufferReady, [&htmlModel](QByteArray data)
+    QObject::connect(&postsLoader, &PostsLoader::dataBufferReady, [&postsModel](QByteArray data)
     {
-        bool isCorrect = HtmlParser::parse(data);
+        bool isCorrect = PostsParser::parse(data);
 
         if(isCorrect)
         {
-            auto result = HtmlParser::result();
+            auto result = PostsParser::result();
 
-            htmlModel.setLoading(true);
+            postsModel.setLoading(true);
             for (const QJsonObject &object : result)
             {
-                auto htmlData = QSharedPointer<HtmlData>::create();
+                auto htmlData = QSharedPointer<PostData>::create();
                 htmlData->setTitle(object.value("title").toString());
                 htmlData->setImageUrl(object.value("src").toString());
                 htmlData->setText(object.value("text").toString());
-                htmlModel.addHtmlData(htmlData);
+                postsModel.addHtmlData(htmlData);
             }
-            htmlModel.setLoading(false);
+            postsModel.setLoading(false);
         }
     });
 
@@ -112,8 +112,8 @@ int main(int argc, char *argv[])
     // also see the .pro file for more details
 //    felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
 
-    engine.rootContext()->setContextProperty("htmlModel", &htmlModel);
-    engine.rootContext()->setContextProperty("htmlLoader", &htmlLoader);
+    engine.rootContext()->setContextProperty("postsModel", &postsModel);
+    engine.rootContext()->setContextProperty("postsLoader", &postsLoader);
 
     engine.load(QUrl(felgo.mainQmlFileName()));
 

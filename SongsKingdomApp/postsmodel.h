@@ -1,10 +1,10 @@
-#ifndef HTMLMODEL_H
-#define HTMLMODEL_H
+#ifndef POSTSMODEL_H
+#define POSTSMODEL_H
 
 #include <QAbstractListModel>
 #include <QSharedPointer>
 
-class HtmlData : public QObject
+class PostData : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString pageUrl READ pageUrl WRITE setPageUrl NOTIFY pageUrlChanged)
@@ -12,7 +12,7 @@ class HtmlData : public QObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
 public:
-    explicit HtmlData(QObject *parent = nullptr);
+    explicit PostData(QObject *parent = nullptr);
 
     QString pageUrl() const;
     QString imageUrl() const;
@@ -38,7 +38,7 @@ private:
     QString m_text;
 };
 
-class HtmlModel : public QAbstractListModel
+class PostsModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(bool loading READ loading WRITE setLoading NOTIFY loadingChanged)
@@ -55,7 +55,7 @@ public:
         Text
     };
 
-    explicit HtmlModel(QObject *parent = nullptr);
+    explicit PostsModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -63,7 +63,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void addHtmlData(QSharedPointer<HtmlData> data);
+    void addHtmlData(QSharedPointer<PostData> data);
     bool loading() const;
 
 public slots:
@@ -73,8 +73,8 @@ signals:
     void loadingChanged(bool loading);
 
 private:
-    QList<QSharedPointer<HtmlData>> m_listData;
+    QList<QSharedPointer<PostData>> m_listData;
     bool m_loading = true;
 };
 
-#endif // HTMLMODEL_H
+#endif // POSTSMODEL_H

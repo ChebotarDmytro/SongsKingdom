@@ -1,5 +1,5 @@
-#ifndef HTMLLOADER_H
-#define HTMLLOADER_H
+#ifndef POSTSLOADER_H
+#define POSTSLOADER_H
 
 #include <QObject>
 
@@ -7,14 +7,14 @@ class QNetworkConfigurationManager;
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class HtmlLoader : public QObject
+class PostsLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit HtmlLoader(QObject *parent = nullptr);
+    explicit PostsLoader(QObject *parent = nullptr);
 
     Q_INVOKABLE bool isConnection();
-    Q_INVOKABLE void fetchPage();
+    Q_INVOKABLE void fetchPosts();
 
 signals:
     void dataBufferReady(QByteArray);
@@ -31,4 +31,4 @@ private:
     QByteArray m_DataBuffer;
 };
 
-#endif // HTMLLOADER_H
+#endif // POSTSLOADER_H

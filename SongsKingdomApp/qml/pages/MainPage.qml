@@ -6,13 +6,13 @@ import "../components"
 ListPage {
     id: root
 
-    function fetchPage()
+    function fetchPosts()
     {
-        if(htmlLoader.isConnection()) {
+        if(postsLoader.isConnection()) {
             console.log("connection good");
             badConnectionId.visible = false;
             busyIndicatorId.visible = true;
-            htmlLoader.fetchPage();
+            postsLoader.fetchPosts();
         } else {
             console.log("connection bad");
             busyIndicatorId.visible = false;
@@ -62,13 +62,13 @@ ListPage {
                 Layout.alignment: Qt.AlignCenter
                 text: qsTr("Обновити")
                 onClicked: {
-                    fetchPage();
+                    fetchPosts();
                 }
             }
         }
     }
 
-    model: htmlModel
+    model: postsModel
     delegate: PostRow {
         _source: imageUrl
         _title: title
@@ -79,13 +79,13 @@ ListPage {
     }
 
     Connections {
-        target: htmlModel
+        target: postsModel
         onLoadingChanged: {
             busyIndicatorId.visible = false;
         }
     }
 
     Component.onCompleted: {
-        fetchPage();
+        fetchPosts();
     }
 }

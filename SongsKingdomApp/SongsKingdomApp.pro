@@ -39,9 +39,9 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    htmlloader.cpp \
-    htmlmodel.cpp \
-    htmlparser.cpp \
+    postsloader.cpp \
+    postsmodel.cpp \
+    postsparser.cpp \
 
 
 android {
@@ -67,9 +67,9 @@ RESOURCES += \
     resources.qrc
 
 HEADERS += \
-    htmlloader.h \
-    htmlmodel.h \
-    htmlparser.h
+    postsloader.h \
+    postsmodel.h \
+    postsparser.h
 
 message( $$PWD )
 

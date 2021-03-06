@@ -1,12 +1,12 @@
-#ifndef HTMLPARSER_H
-#define HTMLPARSER_H
+#ifndef POSTSPARSER_H
+#define POSTSPARSER_H
 
 #include <QObject>
 #include <QJsonObject>
 
 #include <QGumboParser/qgumbonode.h>
 
-class HtmlParser
+class PostsParser
 {
 public:
 //    static bool parse(QGumboNode root);
@@ -15,11 +15,11 @@ public:
     static bool parse(QByteArray data);
 
 private:
-    HtmlParser(){};
+    PostsParser(){};
 
     static QJsonObject contentParse(QJsonObject content);
 
     static QList<QJsonObject> m_result;
 };
 
-#endif // HTMLPARSER_H
+#endif // POSTSPARSER_H

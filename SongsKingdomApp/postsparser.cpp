@@ -1,4 +1,4 @@
-#include "htmlparser.h"
+#include "postsparser.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -7,9 +7,9 @@
 
 #include <QGumboParser/qgumbodocument.h>
 
-QList<QJsonObject> HtmlParser::m_result;
+QList<QJsonObject> PostsParser::m_result;
 
-bool HtmlParser::parse(QByteArray data)
+bool PostsParser::parse(QByteArray data)
 {
     auto doc = QJsonDocument::fromJson(data);
     if(!doc.isEmpty())
@@ -39,12 +39,12 @@ bool HtmlParser::parse(QByteArray data)
     return false;
 }
 
-QList<QJsonObject> HtmlParser::result()
+QList<QJsonObject> PostsParser::result()
 {
     return m_result;
 }
 
-QJsonObject HtmlParser::contentParse(QJsonObject content)
+QJsonObject PostsParser::contentParse(QJsonObject content)
 {
     auto doc = QGumboDocument::parse(content["rendered"].toString());
     auto root = doc.rootNode();

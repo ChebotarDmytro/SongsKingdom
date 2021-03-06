@@ -1,33 +1,33 @@
-#include "htmlmodel.h"
+#include "postsmodel.h"
 
-// HtmlData
+// PostData
 
-HtmlData::HtmlData(QObject *parent) : QObject(parent)
+PostData::PostData(QObject *parent) : QObject(parent)
 {
 
 }
 
-QString HtmlData::pageUrl() const
+QString PostData::pageUrl() const
 {
     return m_pageUrl;
 }
 
-QString HtmlData::imageUrl() const
+QString PostData::imageUrl() const
 {
     return m_imageUrl;
 }
 
-QString HtmlData::title() const
+QString PostData::title() const
 {
     return m_title;
 }
 
-QString HtmlData::text() const
+QString PostData::text() const
 {
     return m_text;
 }
 
-void HtmlData::setPageUrl(QString pageUrl)
+void PostData::setPageUrl(QString pageUrl)
 {
     if (m_pageUrl == pageUrl)
         return;
@@ -36,7 +36,7 @@ void HtmlData::setPageUrl(QString pageUrl)
     emit pageUrlChanged(m_pageUrl);
 }
 
-void HtmlData::setImageUrl(QString imageUrl)
+void PostData::setImageUrl(QString imageUrl)
 {
     if (m_imageUrl == imageUrl)
         return;
@@ -45,7 +45,7 @@ void HtmlData::setImageUrl(QString imageUrl)
     emit imageUrlChanged(m_imageUrl);
 }
 
-void HtmlData::setTitle(QString title)
+void PostData::setTitle(QString title)
 {
     if (m_title == title)
         return;
@@ -54,7 +54,7 @@ void HtmlData::setTitle(QString title)
     emit titleChanged(m_title);
 }
 
-void HtmlData::setText(QString text)
+void PostData::setText(QString text)
 {
     if (m_text == text)
         return;
@@ -63,26 +63,26 @@ void HtmlData::setText(QString text)
     emit textChanged(m_text);
 }
 
-// HtmlModel
+// PostsModel
 
-HtmlModel::HtmlModel(QObject *parent) : QAbstractListModel(parent)
+PostsModel::PostsModel(QObject *parent) : QAbstractListModel(parent)
 {
 
 }
 
-int HtmlModel::rowCount(const QModelIndex &parent) const
+int PostsModel::rowCount(const QModelIndex &parent) const
 {
     return m_listData.size();
 }
 
-QVariant HtmlModel::data(const QModelIndex &index, int role) const
+QVariant PostsModel::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid())
         return {};
     if(index.row() < 0 || index.row() >= m_listData.count())
         return {};
 
-    HtmlData *htmlData = m_listData[index.row()].get();
+    PostData *htmlData = m_listData[index.row()].get();
     if(role == PageUrl)
         return htmlData->pageUrl();
     if(role == ImageUrl)
@@ -95,9 +95,9 @@ QVariant HtmlModel::data(const QModelIndex &index, int role) const
     return {};
 }
 
-bool HtmlModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool PostsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    HtmlData *htmlData = m_listData[index.row()].get();
+    PostData *htmlData = m_listData[index.row()].get();
 
     switch (role)
     {
@@ -111,7 +111,7 @@ bool HtmlModel::setData(const QModelIndex &index, const QVariant &value, int rol
     return true;
 }
 
-Qt::ItemFlags HtmlModel::flags(const QModelIndex &index) const
+Qt::ItemFlags PostsModel::flags(const QModelIndex &index) const
 {
     if(!index.isValid())
         return Qt::NoItemFlags;
@@ -119,7 +119,7 @@ Qt::ItemFlags HtmlModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled;
 }
 
-QHash<int, QByteArray> HtmlModel::roleNames() const
+QHash<int, QByteArray> PostsModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[PageUrl] = "pageUrl";
@@ -129,7 +129,7 @@ QHash<int, QByteArray> HtmlModel::roleNames() const
     return roles;
 }
 
-void HtmlModel::addHtmlData(QSharedPointer<HtmlData> data)
+void PostsModel::addHtmlData(QSharedPointer<PostData> data)
 {
     const int index = m_listData.size();
     beginInsertRows(QModelIndex(), index, index);
@@ -137,12 +137,12 @@ void HtmlModel::addHtmlData(QSharedPointer<HtmlData> data)
     endInsertRows();
 }
 
-bool HtmlModel::loading() const
+bool PostsModel::loading() const
 {
     return m_loading;
 }
 
-void HtmlModel::setLoading(bool loading)
+void PostsModel::setLoading(bool loading)
 {
     if (m_loading == loading)
         return;
