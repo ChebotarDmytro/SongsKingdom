@@ -80,11 +80,11 @@ int main(int argc, char *argv[])
             postsModel.setLoading(true);
             for (const QJsonObject &object : result)
             {
-                auto htmlData = QSharedPointer<PostData>::create();
-                htmlData->setTitle(object.value("title").toString());
-                htmlData->setImageUrl(object.value("src").toString());
-                htmlData->setText(object.value("text").toString());
-                postsModel.addHtmlData(htmlData);
+                auto postData = QSharedPointer<PostData>::create();
+                postData->setTitle(object.value("title").toString());
+                postData->setImageUrl(object.value("src").toString());
+                postData->setText(object.value("text").toString());
+                postsModel.addHtmlData(postData);
             }
             postsModel.setLoading(false);
         }

@@ -82,29 +82,29 @@ QVariant PostsModel::data(const QModelIndex &index, int role) const
     if(index.row() < 0 || index.row() >= m_listData.count())
         return {};
 
-    PostData *htmlData = m_listData[index.row()].get();
+    PostData *postData = m_listData[index.row()].get();
     if(role == PageUrl)
-        return htmlData->pageUrl();
+        return postData->pageUrl();
     if(role == ImageUrl)
-        return htmlData->imageUrl();
+        return postData->imageUrl();
     if(role == Title)
-        return htmlData->title();
+        return postData->title();
     if(role == Text)
-        return htmlData->text();
+        return postData->text();
 
     return {};
 }
 
 bool PostsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    PostData *htmlData = m_listData[index.row()].get();
+    PostData *postData = m_listData[index.row()].get();
 
     switch (role)
     {
-    case PageUrl:  htmlData->setPageUrl(value.toString());  break;
-    case ImageUrl: htmlData->setImageUrl(value.toString()); break;
-    case Title:    htmlData->setTitle(value.toString());    break;
-    case Text:     htmlData->setText(value.toString());     break;
+    case PageUrl:  postData->setPageUrl(value.toString());  break;
+    case ImageUrl: postData->setImageUrl(value.toString()); break;
+    case Title:    postData->setTitle(value.toString());    break;
+    case Text:     postData->setText(value.toString());     break;
     }
 
     emit dataChanged(index, index, QVector<int>() << role);
