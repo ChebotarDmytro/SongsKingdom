@@ -20,18 +20,19 @@ ListPage {
         }
     }
 
+    function openPostPage(model) {
+        if(!root.navigationStack.contains(postPageId)) {
+            var properties = { postTitle: model.postTitle,
+                               postSource: model.imageUrl,
+                               postText: model.text}
+            root.navigationStack.push(postPageId, properties);
+        }
+    }
+
     title: qsTr("ICC")
     listView.anchors.margins: dp(10)
     listView.spacing: dp(10)
     listView.scrollIndicatorVisible: false
-
-//    listView.onCurrentIndexChanged: {
-//        console.log("currentIndex: ", listView.currentIndex)
-////        root.navigationStack.push(Qt.resolvedUrl("MenuPage.qml"))
-//    }
-//    listView.onCurrentItemChanged: {
-//        console.log("onCurrentItemChanged: ")
-//    }
 
     AppActivityIndicator {
         id: busyIndicatorId
@@ -70,11 +71,16 @@ ListPage {
 
     model: postsModel
     delegate: PostRow {
-        _source: imageUrl
-        _title: title
-
+        source: imageUrl
+        title: postTitle
         onOpenPage: {
-            root.navigationStack.push(Qt.resolvedUrl("SongsListPage.qml"));
+            root.openPostPage(model);
+        }
+    }
+
+    Component {
+        id: postPageId
+        PostPage {
         }
     }
 

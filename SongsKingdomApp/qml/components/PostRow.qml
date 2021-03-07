@@ -1,13 +1,14 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.13
 import QtGraphicalEffects 1.12
 import Felgo 3.0
 
 Rectangle {
     id: root
-    property alias _source: imageId.source
-    property alias _title: titleId.text
+    property alias source: imageId.source
+    property alias title: titleId.text
 
-    signal openPage(string namePage)
+    signal openPage()
 
     height: columnId.height
     width: !parent ? 0 : parent.width
@@ -28,22 +29,20 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-//            listView.currentIndex = index;
-//            console.log("currentIndex: ", listView.currentIndex)
-            console.log("pageUrl: ", model.pageUrl)
-            root.openPage(model.pageUrl)
+            root.openPage();
         }
     }
 
-    Column {
+    ColumnLayout {
         id: columnId
-        anchors.centerIn: parent
+        width: parent.width
 
         AppImage {
             id: imageId
-            height: dp(150)
-            width: root.width
-            fillMode: Image.PreserveAspectCrop
+            Layout.fillWidth: true
+            fillMode: Image.PreserveAspectFit
+            sourceSize.width: parent.width
+            sourceSize.height: parent.width / 4
             source: root.source
             layer.enabled: true
             layer.effect: OpacityMask {
@@ -62,16 +61,14 @@ Rectangle {
 
         AppText {
             id: titleId
-            anchors.left: parent.left
-            anchors.leftMargin: dp(10)
-            height: dp(40)
-            width: root.width
-            elide: Text.ElideRight
+            Layout.fillWidth: true
+            Layout.margins: dp(5)
+            wrapMode: Text.WordWrap
             color: Theme.textColor
             textFormat: Text.RichText
             text: root.title
             maximumLineCount: 1
-            font.pixelSize: Theme.listItem.fontSizeText
+            font.pixelSize: sp(Theme.listItem.fontSizeText)
         }
     }
 }

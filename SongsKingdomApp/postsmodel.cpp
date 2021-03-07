@@ -124,7 +124,7 @@ QHash<int, QByteArray> PostsModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[PageUrl] = "pageUrl";
     roles[ImageUrl] = "imageUrl";
-    roles[Title] = "title";
+    roles[Title] = "postTitle";
     roles[Text] = "text";
     return roles;
 }

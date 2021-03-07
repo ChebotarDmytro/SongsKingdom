@@ -60,6 +60,7 @@ DISTFILES += \
     qml/components/SongRow.qml \
     qml/pages/MainPage.qml \
     qml/pages/MenuPage.qml \
+    qml/pages/PostPage.qml \
     qml/pages/SongsListPage.qml \
     qml/pages/ViewSongPage.qml
 

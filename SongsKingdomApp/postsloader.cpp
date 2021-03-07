@@ -22,7 +22,7 @@ void PostsLoader::fetchPosts()
 {
     //authentication
     QUrlQuery urlQuery;
-    urlQuery.addQueryItem("per_page", "10");
+    urlQuery.addQueryItem("per_page", "20"); // TODO 10
 
     QUrl url("https://kievicc.org/wp-json/wp/v2/posts/");
     url.setUserName("vitalinska");
