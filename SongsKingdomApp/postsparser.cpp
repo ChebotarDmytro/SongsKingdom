@@ -29,6 +29,7 @@ bool PostsParser::parse(QByteArray data)
                 QJsonObject content = contentParse( post["content"].toObject() );
                 resultObject["src"] = content.value("src");
                 resultObject["text"] = content.value("text");
+                resultObject["videoId"] = content.value("videoId");
 
                 m_result.append(resultObject);
             }
@@ -49,10 +50,11 @@ QJsonObject PostsParser::contentParse(QJsonObject content)
     auto doc = QGumboDocument::parse(content["rendered"].toString());
     auto root = doc.rootNode();
 
-    QJsonObject jsonObject;
+    QJsonObject resultObject;
 
+    // parse the <p> </p> tags
+    auto paragraphParse = [&resultObject, &root]() -> void
     {
-        // parse the <p> </p> tags
         auto container = root.getElementsByTagName(HtmlTag::P);
         QString result;
 
@@ -63,45 +65,87 @@ QJsonObject PostsParser::contentParse(QJsonObject content)
                 result += node.outerHtml();
             }
         }
-        jsonObject["text"] = result;
-    }
+        resultObject["text"] = result;
+    };
 
+    // parse the wp-block-image class
+    auto wpBlockImageParse = [&resultObject, &root]() -> void
     {
-        // parse the wp-block-image class
         auto container = root.getElementsByClassName("wp-block-image");
-        if(container.empty())
+        if(!container.empty())
+        {
+            auto children = container.front().children();
+
+            auto node = children.front();
+            if(!node.children().empty())
+            {
+                auto imgNode = node.children().front();
+
+                if(imgNode.tag() == HtmlTag::IMG)
+                {
+                    resultObject["src"] = imgNode.getAttribute("src");
+                }
+            }
+            else // IMG
+            {
+                if(node.tag() == HtmlTag::IMG)
+                {
+                    resultObject["src"] = node.getAttribute("src");
+                }
+            }
+        }
+        else // Empty container
         {
             qDebug() << Q_FUNC_INFO << "Empty container";
-            jsonObject["src"] = QJsonValue("qrc:/assets/no-image.png");
-            return jsonObject;
+            resultObject["src"] = QJsonValue("qrc:/assets/no-image.png");
         }
+    };
 
-        auto children = container.front().children();
-        if(children.empty())
+    auto videoContainerParse = [&resultObject, &root]() -> void
+    {
+        auto container = root.getElementsByClassName("video-container");
+        if(!container.empty())
         {
-            qDebug() << Q_FUNC_INFO << "Empty children";
-            jsonObject["src"] = QJsonValue("qrc:/assets/no-image.png");
-            return jsonObject;
-        }
-
-        auto node = children.front();
-        if(!node.children().empty())
-        {
-            auto imgNode = node.children().front();
-
-            if(imgNode.tag() == HtmlTag::IMG)
+            QJsonArray videoIdArray = resultObject["videoId"].toArray();
+            for(size_t i = 0; i < container.size(); i++)
             {
-                jsonObject["src"] = imgNode.getAttribute("src");
-            }
-        }
-        else // IMG
-        {
-            if(node.tag() == HtmlTag::IMG)
-            {
-                jsonObject["src"] = node.getAttribute("src");
-            }
-        }
-    }
+                QJsonObject videoIdObject;
 
-    return jsonObject;
+                auto node = container.at(i);
+                if(!node.children().empty())
+                {
+                    auto iframeNode = node.children().front();
+                    if(iframeNode.tag() == HtmlTag::IFRAME)
+                    {
+                        auto key = QString("videoId%1").arg(i);
+                        videoIdObject[key] = videoId(iframeNode.getAttribute("src"));
+                    }
+                }
+                videoIdArray.append(videoIdObject);
+            }
+            resultObject["videoId"] = videoIdArray;
+        }
+        else // Empty container
+        {
+            qDebug() << Q_FUNC_INFO << "The video-container is empty";
+            resultObject["videoId"] = resultObject["videoId"].toArray();;
+        }
+    };
+
+    paragraphParse();
+    wpBlockImageParse();
+    videoContainerParse();
+
+    return resultObject;
+}
+
+QString PostsParser::videoId(const QString &url)
+{
+    QString regEx = R"((?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?)";
+    auto it = QRegularExpression(regEx).globalMatch(url);
+
+    if(!it.isValid()) return {};
+
+    QRegularExpressionMatch match = it.next();
+    return match.captured(1);
 }

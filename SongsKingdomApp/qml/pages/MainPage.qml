@@ -24,7 +24,8 @@ ListPage {
         if(!root.navigationStack.contains(postPageId)) {
             var properties = { postTitle: model.postTitle,
                                postSource: model.imageUrl,
-                               postText: model.text}
+                               postText: model.text,
+                               videoIds: model.videoIds}
             root.navigationStack.push(postPageId, properties);
         }
     }
@@ -69,7 +70,7 @@ ListPage {
         }
     }
 
-    model: postsModel
+    model: postsLoader.model
     delegate: PostRow {
         source: imageUrl
         title: postTitle
@@ -85,7 +86,7 @@ ListPage {
     }
 
     Connections {
-        target: postsModel
+        target: postsLoader.model
         onLoadingChanged: {
             busyIndicatorId.visible = false;
         }

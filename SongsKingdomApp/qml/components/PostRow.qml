@@ -43,7 +43,6 @@ Rectangle {
             fillMode: Image.PreserveAspectFit
             sourceSize.width: parent.width
             sourceSize.height: parent.width / 4
-            source: root.source
             layer.enabled: true
             layer.effect: OpacityMask {
                 maskSource: Item {
@@ -66,7 +65,6 @@ Rectangle {
             wrapMode: Text.WordWrap
             color: Theme.textColor
             textFormat: Text.RichText
-            text: root.title
             maximumLineCount: 1
             font.pixelSize: sp(Theme.listItem.fontSizeText)
         }

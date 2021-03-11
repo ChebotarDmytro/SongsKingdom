@@ -8,6 +8,7 @@ FlickablePage {
     property alias postTitle: titleId.text
     property alias postSource: imageId.source
     property alias postText: textId.text
+    property var videoIds: [ ]
 
     title: qsTr("Події ICC")
 
@@ -45,7 +46,15 @@ FlickablePage {
             wrapMode: Text.WordWrap
             textFormat: Text.RichText
             font.pixelSize: sp(14)
-            font.family: "Arial"
+        }
+
+        Repeater {
+            model: root.videoIds
+            YouTubeWebPlayer {
+                Layout.fillWidth: true
+                Layout.margins: dp(10)
+                videoId: modelData
+            }
         }
     }
 }

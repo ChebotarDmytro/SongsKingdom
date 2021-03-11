@@ -35,17 +35,28 @@ App {
             title: qsTr("Пісенник")
             icon: IconType.book
 
-            NavigationStack {
-                Page {
-                    Text {
-                        anchors.fill: parent
-                        id: name
-                        textFormat: Text.RichText
-                        wrapMode: Text.WordWrap
-                        text: qsTr("<p>Місце:&nbsp;<a href=https://zoom.us/j/5396261476>https://zoom.us/j/5396261476</a></p>")
-                    }
+//            NavigationStack {
+//                Page {
+//                    Text {
+//                        anchors.fill: parent
+//                        id: name
+//                        textFormat: Text.RichText
+//                        wrapMode: Text.WordWrap
+//                        text: qsTr("<p>Місце:&nbsp;<a href=https://zoom.us/j/5396261476>https://zoom.us/j/5396261476</a></p>")
+//                    }
 
+//                }
+//            }
+
+            NavigationStack {
+              Page {
+                title: "YouTube Player"
+
+                YouTubeWebPlayer {
+                  videoId: "KZkw2n2vSm8"
                 }
+
+              }
             }
         }
     }

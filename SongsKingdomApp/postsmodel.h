@@ -7,35 +7,35 @@
 class PostData : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString pageUrl READ pageUrl WRITE setPageUrl NOTIFY pageUrlChanged)
     Q_PROPERTY(QString imageUrl READ imageUrl WRITE setImageUrl NOTIFY imageUrlChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QStringList videoIds READ videoIds WRITE setVideoIds NOTIFY videoIdsChanged)
 public:
     explicit PostData(QObject *parent = nullptr);
 
-    QString pageUrl() const;
     QString imageUrl() const;
     QString title() const;
     QString text() const;
+    QStringList videoIds() const;
 
 public slots:
-    void setPageUrl(QString pageUrl);
     void setImageUrl(QString imageUrl);
     void setTitle(QString title);
     void setText(QString text);
+    void setVideoIds(QStringList videoIds);
 
 signals:
-    void pageUrlChanged(QString pageUrl);
     void imageUrlChanged(QString imageUrl);
     void titleChanged(QString title);
     void textChanged(QString text);
+    void videoIdsChanged(QStringList videoIds);
 
 private:
-    QString m_pageUrl;
     QString m_imageUrl;
     QString m_title;
     QString m_text;
+    QStringList m_videoIds;
 };
 
 class PostsModel : public QAbstractListModel
@@ -49,10 +49,10 @@ public:
     };
     enum HtmlRoles
     {
-        PageUrl = Qt::UserRole + 1,
-        ImageUrl,
+        ImageUrl = Qt::UserRole + 1,
         Title,
-        Text
+        Text,
+        VideoIds,
     };
 
     explicit PostsModel(QObject *parent = nullptr);
@@ -63,7 +63,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void addHtmlData(QSharedPointer<PostData> data);
+    void addPostData(QSharedPointer<PostData> data);
     bool loading() const;
 
 public slots:

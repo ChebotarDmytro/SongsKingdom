@@ -1,14 +1,22 @@
 #include "postsloader.h"
 
+// network
 #include <QNetworkConfigurationManager>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrlQuery>
 
+// json
+#include <QJsonArray>
+#include <QJsonObject>
+
+#include "postsparser.h"
+
 PostsLoader::PostsLoader(QObject *parent) : QObject(parent),
     m_NetConfigManager(new QNetworkConfigurationManager(this)),
-    m_NetManager(new QNetworkAccessManager(this))
+    m_NetManager(new QNetworkAccessManager(this)),
+    m_Model(new PostsModel(this))
 {
 
 }
@@ -42,6 +50,11 @@ void PostsLoader::fetchPosts()
     connect(m_NetReply, &QNetworkReply::finished, this, &PostsLoader::dataReadFinished);
 }
 
+PostsModel *PostsLoader::model() const
+{
+    return m_Model;
+}
+
 void PostsLoader::dataReadyRead()
 {
     m_DataBuffer.append(m_NetReply->readAll());
@@ -55,7 +68,38 @@ void PostsLoader::dataReadFinished()
         return;
     }
 
-    emit dataBufferReady(m_DataBuffer);
+    bool isCorrect = PostsParser::parse(m_DataBuffer);
+
+    if(isCorrect)
+    {
+        auto result = PostsParser::result();
+
+        m_Model->setLoading(true);
+        for (const QJsonObject &object : result)
+        {
+            auto postData = QSharedPointer<PostData>::create();
+            postData->setTitle   ( object.value("title").toString()  );
+            postData->setImageUrl( object.value("src").toString()    );
+            postData->setText    ( object.value("text").toString()   );
+            postData->setVideoIds ( videoIds(object.value("videoId").toArray()) );
+            m_Model->addPostData(postData);
+        }
+        m_Model->setLoading(false);
+
+        emit modelChanged();
+    }
 
     m_DataBuffer.clear();
+}
+
+QStringList PostsLoader::videoIds(const QJsonArray &array)
+{
+    QStringList result;
+    for(int i = 0; i < array.size(); i++)
+    {
+        auto object = array.at(i).toObject();
+        auto key = QString("videoId%1").arg(i);
+        result << object.value(key).toString();
+    }
+    return result;
 }
