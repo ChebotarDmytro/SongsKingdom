@@ -7,6 +7,7 @@ Rectangle {
     id: root
     property alias source: imageId.source
     property alias title: titleId.text
+    property var videoIds: [ ]
 
     signal openPage()
 
@@ -39,6 +40,7 @@ Rectangle {
 
         AppImage {
             id: imageId
+            visible: source == "qrc:/assets/no-image.png" ?  false : true
             Layout.fillWidth: true
             fillMode: Image.PreserveAspectFit
             sourceSize.width: parent.width
@@ -58,6 +60,13 @@ Rectangle {
             }
         }
 
+        YouTubeWebPlayer {
+            Layout.fillWidth: true
+            visible: !imageId.visible
+            videoId: videoIds.length > 0 ? videoIds[0] : "Invalid"
+            enabled: false
+        }
+
         AppText {
             id: titleId
             Layout.fillWidth: true
@@ -65,7 +74,6 @@ Rectangle {
             wrapMode: Text.WordWrap
             color: Theme.textColor
             textFormat: Text.RichText
-            maximumLineCount: 1
             font.pixelSize: sp(Theme.listItem.fontSizeText)
         }
     }

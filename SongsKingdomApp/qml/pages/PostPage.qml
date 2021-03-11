@@ -22,6 +22,7 @@ FlickablePage {
         AppImage {
             id: imageId
             Layout.fillWidth : true
+            visible: source == "qrc:/assets/no-image.png" ?  false : true
             fillMode: Image.PreserveAspectFit
             sourceSize.width: parent.width
             sourceSize.height: parent.width / 2
@@ -43,6 +44,7 @@ FlickablePage {
             Layout.leftMargin : dp(10)
             Layout.rightMargin : dp(10)
             Layout.bottomMargin : dp(10)
+            visible: text.length > 0 ? true : false
             wrapMode: Text.WordWrap
             textFormat: Text.RichText
             font.pixelSize: sp(14)

@@ -74,6 +74,7 @@ ListPage {
     delegate: PostRow {
         source: imageUrl
         title: postTitle
+        videoIds: model.videoIds
         onOpenPage: {
             root.openPostPage(model);
         }
