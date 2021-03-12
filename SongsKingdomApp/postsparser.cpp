@@ -1,5 +1,6 @@
 #include "postsparser.h"
 
+#include <QRegularExpression>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
