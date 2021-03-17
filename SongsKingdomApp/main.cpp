@@ -1,5 +1,5 @@
 #include <QtWebView>
-#include <QApplication>
+#include <QGuiApplication>
 #include <FelgoApplication>
 
 #include <QQmlApplicationEngine>
@@ -18,7 +18,7 @@
 int main(int argc, char *argv[])
 {
     QtWebView::initialize();
-    QApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
 
     PostsLoader postsLoader;
 

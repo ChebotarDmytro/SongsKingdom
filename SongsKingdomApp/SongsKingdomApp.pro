@@ -89,7 +89,7 @@ else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs
 else:unix: PRE_TARGETDEPS += $$PWD/libs/libQGumboParser.a
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-#QML_IMPORT_PATH = /home/dimon/Felgo/Felgo/android_x86
+#QML_IMPORT_PATH = /home/dimon/Felgo/Felgo/android_armv7
 
 #android {
 #ANDROID_DEPLOYMENT_DEPENDENCIES += \
