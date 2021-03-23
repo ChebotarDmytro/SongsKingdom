@@ -59,6 +59,9 @@ DISTFILES += \
     qml/components/CircleButton.qml \
     qml/components/PostRow.qml \
     qml/components/SongRow.qml \
+    qml/model/DataModel.qml \
+    qml/model/Logic.qml \
+    qml/model/YouTubeAPI.qml \
     qml/pages/MainPage.qml \
     qml/pages/MenuPage.qml \
     qml/pages/PostPage.qml \

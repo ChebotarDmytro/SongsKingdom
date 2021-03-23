@@ -27,8 +27,9 @@ bool PostsParser::parse(QByteArray data)
                 QJsonObject title = post["title"].toObject();
                 resultObject["title"] = title.value("rendered");
 
+                resultObject["src"] = post["jetpack_featured_media_url"].toString();
+
                 QJsonObject content = contentParse( post["content"].toObject() );
-                resultObject["src"] = content.value("src");
                 resultObject["text"] = content.value("text");
                 resultObject["videoId"] = content.value("videoId");
 
@@ -69,39 +70,6 @@ QJsonObject PostsParser::contentParse(QJsonObject content)
         resultObject["text"] = result;
     };
 
-    // parse the wp-block-image class
-    auto wpBlockImageParse = [&resultObject, &root]() -> void
-    {
-        auto container = root.getElementsByClassName("wp-block-image");
-        if(!container.empty())
-        {
-            auto children = container.front().children();
-
-            auto node = children.front();
-            if(!node.children().empty())
-            {
-                auto imgNode = node.children().front();
-
-                if(imgNode.tag() == HtmlTag::IMG)
-                {
-                    resultObject["src"] = imgNode.getAttribute("src");
-                }
-            }
-            else // IMG
-            {
-                if(node.tag() == HtmlTag::IMG)
-                {
-                    resultObject["src"] = node.getAttribute("src");
-                }
-            }
-        }
-        else // Empty container
-        {
-            qDebug() << Q_FUNC_INFO << "Empty container";
-            resultObject["src"] = QJsonValue("qrc:/assets/no-image.png");
-        }
-    };
-
     auto videoContainerParse = [&resultObject, &root]() -> void
     {
         auto container = root.getElementsByClassName("video-container");
@@ -134,7 +102,6 @@ QJsonObject PostsParser::contentParse(QJsonObject content)
     };
 
     paragraphParse();
-    wpBlockImageParse();
     videoContainerParse();
 
     return resultObject;

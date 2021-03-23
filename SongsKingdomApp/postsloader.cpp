@@ -89,6 +89,7 @@ void PostsLoader::dataReadFinished()
         emit modelChanged();
     }
 
+    m_NetReply->deleteLater();
     m_DataBuffer.clear();
 }
 

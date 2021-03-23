@@ -1,5 +1,6 @@
 import Felgo 3.0
 import QtQuick 2.0
+import QtWebView 1.1
 import "pages"
 
 App {
@@ -18,6 +19,7 @@ App {
     }
 
     Navigation {
+        id: navigationId
         navigationMode: navigationModeDrawer
 
         NavigationItem {
@@ -49,15 +51,27 @@ App {
 //            }
 
             NavigationStack {
-              Page {
-                title: "YouTube Player"
+                Page {
+                  title: "Web View"
 
-                YouTubeWebPlayer {
-                  videoId: "KZkw2n2vSm8"
+                  WebView {
+                    anchors.fill: parent
+                    url: "https://kievicc.org/"
+                    visible: !navigationId.drawer.isOpen
+                  }
                 }
-
               }
-            }
+
+//            NavigationStack {
+//              Page {
+//                title: "YouTube Player"
+
+//                YouTubeWebPlayer {
+//                  videoId: "KZkw2n2vSm8"
+//                }
+
+//              }
+//            }
         }
     }
 }

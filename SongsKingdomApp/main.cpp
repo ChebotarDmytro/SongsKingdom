@@ -13,7 +13,7 @@
 #include "postsloader.h"
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
-//#include <FelgoLiveClient>
+#include <FelgoLiveClient>
 
 int main(int argc, char *argv[])
 {
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     // to start your project as Live Client, comment (remove) the lines "felgo.setMainQmlFileName ..." & "engine.load ...",
     // and uncomment the line below
-    //        FelgoLiveClient client (&engine);
+            FelgoLiveClient client (&engine);
 
     return app.exec();
 }
