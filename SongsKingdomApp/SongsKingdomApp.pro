@@ -57,6 +57,7 @@ ios {
 
 DISTFILES += \
     qml/components/CircleButton.qml \
+    qml/components/PostImage.qml \
     qml/components/PostRow.qml \
     qml/components/SongRow.qml \
     qml/model/DataModel.qml \

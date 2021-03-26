@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.13
 import QtGraphicalEffects 1.12
 import Felgo 3.0
+import "../components"
 
 Rectangle {
     id: root
@@ -37,12 +38,10 @@ Rectangle {
         id: columnId
         width: parent.width
 
-        AppImage {
+        PostImage {
             id: imageId
             Layout.fillWidth: true
             Layout.margins: dp(1)
-            fillMode: Image.PreserveAspectFit
-            sourceSize.width: parent.width
             layer.enabled: true
             layer.effect: OpacityMask {
                 maskSource: Item {

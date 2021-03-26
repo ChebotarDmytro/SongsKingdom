@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.13
 import Felgo 3.0
+import "../components"
 
 FlickablePage {
     id: root
@@ -19,11 +20,11 @@ FlickablePage {
         id: columnId
         width: parent.width
 
-        AppImage {
+        PostImage {
             id: imageId
             Layout.fillWidth : true
-            fillMode: Image.PreserveAspectFit
-            sourceSize.width: parent.width
+            image.sourceSize.width: 0
+            border.width: 0
         }
 
         AppText {

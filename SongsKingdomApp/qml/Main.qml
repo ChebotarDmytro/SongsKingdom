@@ -6,6 +6,10 @@ import "pages"
 App {
     id: appId
 
+    function getApplication() {
+        return appId;
+    }
+
     property bool menuRunning: false
 
     //    onInitTheme: {
