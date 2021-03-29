@@ -9,6 +9,7 @@ FlickablePage {
     property alias postTitle: titleId.text
     property alias postSource: imageId.source
     property alias postText: textId.text
+    property alias youTubePlayer: playerId
     property var videoIds: [ ]
 
     title: qsTr("Події ICC")
@@ -51,11 +52,16 @@ FlickablePage {
 
         Repeater {
             model: root.videoIds
-            YouTubeWebPlayer {
+            PostVideo {
                 Layout.fillWidth: true
                 Layout.margins: dp(10)
                 videoId: modelData
             }
         }
+    }
+
+    YouTubeWebPlayer {
+        id: playerId
+        visible: false
     }
 }
