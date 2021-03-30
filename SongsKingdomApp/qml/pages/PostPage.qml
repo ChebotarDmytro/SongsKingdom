@@ -52,9 +52,8 @@ FlickablePage {
 
         Repeater {
             model: root.videoIds
-            PostVideo {
+             PostVideo {
                 Layout.fillWidth: true
-                Layout.margins: dp(10)
                 videoId: modelData
             }
         }

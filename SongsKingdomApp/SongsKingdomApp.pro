@@ -82,7 +82,10 @@ message( $$PWD )
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/release/ -lQGumboParser
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/debug/ -lQGumboParser
-else:unix: LIBS += -L$$PWD/libs/ -lQGumboParser
+else:unix: LIBS += -L$$PWD/libs/android_libs_x86 -lQGumboParser
+
+# android_libs_ARMv7
+# android_libs_x86
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
